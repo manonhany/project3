@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>نظام إدارة النتائج - منة الله</title>
+    <style>
+        body {
+            font-family: Tahoma;
+            background: linear-gradient(135deg, #ff5fa2, #4a90ff);
+            margin: 0;
+            padding: 20px
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .2)
+        }
+
+        h1 {
+            color: #e91e8c;
+            text-align: center;
+            margin: 0
+        }
+
+        h2 {
+            text-align: center;
+            color: #2b6cff;
+            font-size: 16px
+        }
+
+        h3 {
+            color: #e91e8c
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 6px 0;
+            border: 2px solid #ffc2dd;
+            border-radius: 12px;
+            font-size: 15px;
+            box-sizing: border-box
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px
+        }
+
+        button {
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold
+        }
+
+        .add {
+            background: linear-gradient(90deg, #ff5fa2, #4a90ff);
+            color: white;
+            width: 100%
+        }
+
+        .mercy {
+            background: #ffcc00;
+            width: 100%;
+            margin-top: 10px
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px
+        }
+
+        th {
+            background: #4a90ff;
+            color: white;
+            padding: 10px
+        }
+
+        td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee
+        }
+
+        .nag7 {
+            color: green;
+            font-weight: bold
+        }
+
+        .raseb {
+            color: red;
+            font-weight: bold
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px
+        }
+
+        .box {
+            background: #fff0f6;
+            border: 2px solid #ff5fa2;
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center
+        }
+
+        .box b {
+            font-size: 22px;
+            color: #2b6cff;
+            display: block
+        }
+
+        .report {
+            background: #eef4ff;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border: 2px dashed #4a90ff
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>🎀 نظام إدارة النتائج 🎀</h1>
+        <h2>منة الله هاني سعد الدين السباعي | قسم نظم المعلومات</h2>
+
+        <h3>➕ إضافة طالب جديد</h3>
+        <input id="name" placeholder="اسم الطالب">
+        <div class="row">
+            <input id="g1" type="number" placeholder="درجة المادة 1 (0 - 100)">
+            <input id="g2" type="number" placeholder="درجة المادة 2 (0 - 100)">
+        </div>
+        <div class="row">
+            <input id="g3" type="number" placeholder="درجة المادة 3 (0 - 100)">
+            <input id="att" type="number" placeholder="نسبة الحضور %">
+        </div>
+        <button class="add" onclick="addStudent()">إضافة طالب ✨</button>
+        <button class="mercy" onclick="mercy()">⚖️ تفعيل لجنة الرأفة - رفع 45 لـ 50</button>
+
+        <h3>📋 قائمة الطلاب المضافين - عدد الطلاب: <span id="count">0</span></h3>
+        <table>
+            <tr>
+                <th>الاسم</th>
+                <th>م1</th>
+                <th>م2</th>
+                <th>م3</th>
+                <th>المتوسط</th>
+                <th>الحضور</th>
+                <th>الحالة</th>
+            </tr>
+            <tbody id="tbody"></tbody>
+        </table>
+
+        <div class="stats">
+            <div class="box">عدد الطلاب<b id="s1">0</b></div>
+            <div class="box">الناجحون<b id="s2">0</b></div>
+            <div class="box">الراسبون<b id="s3">0</b></div>
+            <div class="box">نسبة النجاح<b id="s4">0%</b></div>
+        </div>
+
+        <div class="report">
+            <h3>📊 التقرير النهائي</h3>
+            <p id="report"></p>
+        </div>
+        <p style="text-align:center;color:#888">منة الله هاني سعد الدين السباعي - نظم معلومات</p>
+    </div>
+
+    <script>
+        let students = [
+            { name: 'منة الله هاني سعد الدين السباعي', g1: 80, g2: 75, g3: 85, att: 85 },
+            { name: 'أحمد محمود علي', g1: 88, g2: 92, g3: 79, att: 95 },
+            { name: 'نور محمد علي سامي', g1: 65, g2: 70, g3: 68, att: 88 },
+            { name: 'مصطفي هشام محمد حسن', g1: 45, g2: 48, g3: 47, att: 80 },
+            { name: 'مريم ايهاب عمر فؤاد', g1: 92, g2: 89, g3: 95, att: 98 },
+            { name: 'عمر هاني احمد محمد', g1: 55, g2: 60, g3: 52, att: 70 },
+        ];
+
+        students.forEach(s => {
+            s.avg = Math.round((s.g1 + s.g2 + s.g3) / 3);
+            s.status = (s.avg >= 50 && s.att >= 75) ? 'ناجح ✅' : 'راسب ❌';
+            if (s.att < 75) s.status = 'محروم - غياب ❌';
+        });
+
+        function addStudent() {
+            let name = document.getElementById('name').value.trim();
+            let g1 = +document.getElementById('g1').value;
+            let g2 = +document.getElementById('g2').value;
+            let g3 = +document.getElementById('g3').value;
+            let att = +document.getElementById('att').value;
+            if (!name) { alert('اكتبي اسم الطالب'); return; }
+            if (g1 < 0 || g1 > 100 || g2 < 0 || g2 > 100 || g3 < 0 || g3 > 100) { alert('الدرجات من 0 لـ 100'); return; }
+            let avg = Math.round((g1 + g2 + g3) / 3);
+            let status = (avg >= 50 && att >= 75) ? 'ناجح ✅' : 'راسب ❌';
+            if (att < 75) status = 'محروم - غياب ❌';
+            students.push({ name, g1, g2, g3, avg, att, status });
+            render();
+            document.getElementById('name').value = ''; document.getElementById('g1').value = ''; document.getElementById('g2').value = ''; document.getElementById('g3').value = ''; document.getElementById('att').value = '';
+        }
+        function mercy() {
+            let c = 0;
+            students.forEach(s => { if (s.avg >= 45 && s.avg < 50 && s.att >= 75) { s.avg = 50; s.status = 'ناجح ✅ (رأفة)'; c++; } });
+            alert('تم رفع ' + c + ' طالب بلجنة الرأفة');
+            render();
+        }
+        function render() {
+            let tb = document.getElementById('tbody'); tb.innerHTML = '';
+            students.forEach(s => {
+                tb.innerHTML += `<tr><td>${s.name}</td><td>${s.g1}</td><td>${s.g2}</td><td>${s.g3}</td><td>${s.avg}</td><td>${s.att}%</td><td class="${s.status.includes('ناجح') ? 'nag7' : 'raseb'}">${s.status}</td></tr>`;
+            });
+            let nag7 = students.filter(s => s.status.includes('ناجح')).length;
+            let raseb = students.length - nag7;
+            let perc = students.length ? Math.round(nag7 / students.length * 100) : 0;
+            let avgAll = students.length ? Math.round(students.reduce((a, b) => a + b.avg, 0) / students.length) : 0;
+            document.getElementById('count').innerText = students.length;
+            document.getElementById('s1').innerText = students.length;
+            document.getElementById('s2').innerText = nag7;
+            document.getElementById('s3').innerText = raseb;
+            document.getElementById('s4').innerText = perc + '%';
+            document.getElementById('report').innerHTML = `إجمالي الطلاب: <b>${students.length}</b> | الناجحون: <b>${nag7}</b> | الراسبون: <b>${raseb}</b> | نسبة النجاح: <b>${perc}%</b> | متوسط الدفعة: <b>${avgAll}</b>`;
+        }
+        render();
+    </script>
+</body>
+
+</html>
